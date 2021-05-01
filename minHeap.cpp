@@ -2,6 +2,8 @@
 using namespace std;
 // Hash Table Functions
 HashTable::HashTable(int k){
+    cout << k << endl;
+    total_elements = k;
     int firstPrime = 2 * k; 
 	  int i,j,count=0,b=0;
 	  for(i=firstPrime;i>0;i++){
@@ -24,7 +26,6 @@ HashTable::HashTable(int k){
     for(int i = 0; i < tableSize; i++){
         table.at(i) = NULL;
     }
-    total_elements = k;
 }
 int HashTable::getHash(string key){
     hash<string> hash_string;
@@ -40,7 +41,7 @@ void HashTable::insertElement(string key){
     int num = searchElementinTable(key);
     table[num]->frequency++;
   }
-  // Element already on table
+  // Element not on table
   if(searchElementinTable(key) == -1){
   int hashValue = getHash(key);
   int originalValue = hashValue;
@@ -50,7 +51,7 @@ void HashTable::insertElement(string key){
             table.at(hashValue)->frequency += 1;
            // table.at(hashValue)->indexArray = vdata.size() - 1;;
         }else{
-            for (int j = 1; j < total_elements; j++){
+            for (int j = 1; j < tableSize; j++){
               int t = ((hashValue + (j * j)) % tableSize);
               if (table.at(t) == NULL){
                     table.at(hashValue) = new struct entry;
@@ -60,9 +61,21 @@ void HashTable::insertElement(string key){
                     break;
                 }else if(originalValue == t){
                     // this is the case where table is full
-                    
-                    // deleteElement();
-
+                    int minimumValue = -1;
+                    for(int i = 0; i < tableSize;i++){
+                      if(table.at(i)->frequency > minimumValue){
+                        minimumValue = table.at(i)->frequency;
+                      }
+                    }
+                    int index = 0;
+                    for(int j = 0; j < tableSize;j++){
+                      if(table.at(j)->frequency == minimumValue){
+                        index = j;                      
+                      }
+                    }
+                    string str = table.at(index)->str;
+                    deleteElement(str);
+                    insertElement(key);
                     break;
                 }
             }
@@ -70,8 +83,11 @@ void HashTable::insertElement(string key){
   }     
 }
 int HashTable::searchElementinTable(string key){
+    cout << getHash(key) << endl;
     int hashValue = getHash(key);
+    cout << "hey2" << endl;
     int originalValue = hashValue;
+    cout << "hey3" << endl;
       if(table.at(hashValue)->str == key){//NULL or Deleted
             return hashValue;
         }else{
@@ -127,9 +143,9 @@ int hashValue = getHash(key);
             }
         }
 }
-
 // min Heap Definitions
 minHeap::minHeap(int k){
+    size = 0;
     vdata.resize(k);
     HashTable h1(k);
 }
@@ -202,6 +218,7 @@ void minHeap::insert(string value){
 
 
 void minHeap::popMin(){
+  string str = vdata[0]->str;
   //replace rightmost value with the root
   vdata[0] = vdata[vdata.size()-1];
   //delete the rightmost value
@@ -238,4 +255,5 @@ void minHeap::popMin(){
             swap(vdata[left], vdata[i]);
     }
   }
+  h1.deleteElement(str);
 }

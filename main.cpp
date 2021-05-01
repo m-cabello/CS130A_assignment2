@@ -25,8 +25,8 @@ int main(int argc, char** argv){
 
   //Read File   
   int k = stoi(argv[3]);
-  string line;
   minHeap heap1(k);
+  string line;
     if (stringFile.is_open()){
         while (getline(stringFile,line, ',')){
                 heap1.insert(line); 

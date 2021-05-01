@@ -15,7 +15,7 @@ struct entry{
 class HashTable{
 public:
   // Constructor to create a hash table with the next prime number of 2 * n:
-  HashTable(int k = 0);
+  HashTable(int k);
   // Hash function to calculate hash for a value:
   int getHash(string key);
   int getSize();
@@ -40,7 +40,7 @@ class minHeap{
     string printHeap(); // prints "String:Frequency"
  private:
     std::vector<entry*> vdata;
-    HashTable h1; //Initializes a hastable as soon as a heap is created
+    HashTable h1(int k); //Initializes a hastable as soon as a heap is created
     int size; // how many of the nodes are valid, non-empty, vdata.size returns the size of the vector
 };
 
