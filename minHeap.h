@@ -32,7 +32,7 @@ private:
 
 class minHeap{
  public:
-    minHeap(int k = 0);
+    minHeap(int k);
     void insert(string value);     
     void popMin();  //delets min value, replaces it with furthest value to the right and then perculates down
     bool isFull(); // checks if size is full
