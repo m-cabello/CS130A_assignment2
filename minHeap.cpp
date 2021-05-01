@@ -2,7 +2,6 @@
 using namespace std;
 // Hash Table Functions
 HashTable::HashTable(int k){
-    cout << k << endl;
     total_elements = k;
     int firstPrime = 2 * k; 
 	  int i,j,count=0,b=0;
