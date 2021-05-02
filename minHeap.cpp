@@ -2,7 +2,6 @@
 using namespace std;
 // Hash Table Functions
 HashTable::HashTable(int k){
-    cout << k << endl;
     int firstPrime = 2 * k; 
 	  int i,j,count=0,b=0;
 	  for(i=firstPrime;i>0;i++){
@@ -35,11 +34,11 @@ int HashTable::getSize(){
     return total_elements;
 }
 int HashTable::searchElementinTable(string key){
-    cout << getHash(key) << endl;
+    // cout << getHash(key) << endl;
     int hashValue = getHash(key);
-    cout << "hey2" << endl;
+    // cout << "hey2" << endl;
     int originalValue = hashValue;
-    cout << "hey3" << endl;
+    // cout << "hey3" << endl;
       if(table.at(hashValue)->str == key){//NULL or Deleted
             return hashValue;
         }else{
@@ -86,7 +85,7 @@ int HashTable::searchElementinArray(string key){
 minHeap::minHeap(int k){
     size = 0;
     vdata.resize(k);
-    //HashTable h1(k);
+    HashTable h1(k);
 }
 
 int minHeap::getSize(){

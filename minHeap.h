@@ -9,7 +9,8 @@ using namespace std;
 struct entry{
   string str;
   int frequency;
-  int indexArray; // should update in insert and delete, and 
+  int indexArray; // index of where this entry is in the array, should update in insert and delete, and 
+  int ageCounter; // keep tracks of how old a node is in the heap
 }; 
 
 class HashTable{
