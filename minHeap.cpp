@@ -2,6 +2,7 @@
 using namespace std;
 // Hash Table Functions
 HashTable::HashTable(int k){
+    cout << k << endl;
     int firstPrime = 2 * k; 
 	  int i,j,count=0,b=0;
 	  for(i=firstPrime;i>0;i++){
@@ -89,7 +90,15 @@ minHeap::minHeap(int k){
 }
 
 int minHeap::getSize(){
-  return vdata.size();
+  return size;
+}
+
+bool minHeap::isFull(){
+  if(size == vdata.size()){
+    return true;
+  }else{
+    return false;
+  }
 }
 string minHeap::printHeap(){
   ostringstream out;

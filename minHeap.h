@@ -34,10 +34,10 @@ class minHeap{
     void insert(string value); //inserts element in the heap, then on the hashTable
     void popMin();  //delets min value, replaces it with furthest value to the right and then perculates down, then deletes value in the hashtable too
     bool isFull(); // checks if size is full
-    int getSize(); //returns size of valid entries , vdata.size
+    int getSize(); //returns size of valid entries in the array
     string printHeap(); // prints "String:Frequency"
  private:
     std::vector<entry*> vdata;
-    HashTable h1(int k = 0); //Initializes a hastable as soon as a heap is created
-    int size; // how many of the nodes are valid, non-empty, vdata.size returns the size of the vector
+    HashTable h1; //Initializes a hastable as soon as a heap is created
+    int size; // how many of the nodes are valid, non-empty, vdata.size() returns the size of the vector
 };
