@@ -1,8 +1,8 @@
 #include "minHeap.h"
 using namespace std;
 // Hash Table Functions
+
 HashTable::HashTable(int k){
-    cout << k << endl;
     int firstPrime = 2 * k; 
 	  int i,j,count=0,b=0;
 	  for(i=firstPrime;i>0;i++){
@@ -20,10 +20,15 @@ HashTable::HashTable(int k){
 		if(count==1)
 			break;
 	  }
-    table.resize(tableSize);
+    //table.resize(tableSize);
     // Setting all the pointers on table to point to a NULL Struct
     for(int i = 0; i < tableSize; i++){
-        table.at(i) = NULL;
+        entry *e1 = new struct entry;
+        e1->str = "NULL";
+        e1->frequency = 0;
+        e1->indexArray = 0;
+        e1->ageCounter = 0;
+        table.push_back(e1);
     }
     total_elements = k;
 }
@@ -63,12 +68,13 @@ int firstPrime = 2 * k;
 }
 
 int HashTable::searchElementinTable(string key){
-    // cout << getHash(key) << endl;
     int hashValue = getHash(key);
-    // cout << "hey2" << endl;
     int originalValue = hashValue;
-    // cout << "hey3" << endl;
+      if(table.at(hashValue)->str == "NULL"){
+        return -1;
+      }
       if(table.at(hashValue)->str == key){//NULL or Deleted
+            cout << "hey2" << endl;
             return hashValue;
         }else{
             for (int j = 1; j < total_elements; j++){
@@ -76,7 +82,7 @@ int HashTable::searchElementinTable(string key){
               if (table.at(t)->str == key){
                     return t;
                 }
-              if (table.at(t) == NULL){
+              if (table.at(t)->str == "NULL"){
                     return -1;
                 }
               if (originalValue == t){
@@ -112,8 +118,8 @@ int HashTable::searchElementinArray(string key){
 // min Heap Definitions
 minHeap::minHeap(int k){
     size = 0;
-    vdata.resize(k);
-    HashTable h1(k);
+    vdata.resize(0);
+    h1 = new HashTable(k);
     //h1.setTotalElements(k);
     //h1.setTableSize();
 }
@@ -151,18 +157,18 @@ string minHeap::printHeap(){
 }
 void minHeap::insert(string value){
   //Element not on table
-  if (h1.searchElementinTable(value) == -1){
+  if (h1->searchElementinTable(value) == -1){
       int i = vdata.size();
       // check if there is space in the table *check THIS IF STATEMENT*
-      if(i != h1.getTableSize()){
-        entry * e1;
+      if(i != h1->getTableSize()){
+        entry *e1 = new struct entry;        
         e1->str = value;
         e1->frequency = 1;
         e1->ageCounter = 1;
         e1->indexArray = vdata.size() - 1;
         vdata.push_back(e1);
             // perculate up
-            while(i!=0){
+            while(i!=1){
             //key to parent node
             int p = (i-1)/2;
             //if the parent key is greater than the key of the node inserted, bubble up!
@@ -201,33 +207,33 @@ void minHeap::insert(string value){
       }
     //Check if the element is on the table, Increase frequency
     }else{
-      int num = h1.searchElementinTable(value);
+      int num = h1->searchElementinTable(value);
       vdata.at(num)->frequency ++;
   }
 
 //Insert Element in Table
 // Check if element is already in the table
-  if(h1.searchElementinTable(value) != -1){ 
-    int num = h1.searchElementinTable(value);
-    h1.table[num]->frequency++;
+  if(h1->searchElementinTable(value) != -1){ 
+    int num = h1->searchElementinTable(value);
+    h1->table[num]->frequency++;
   }
   // Element not on table
-  if(h1.searchElementinTable(value) == -1){
-  int hashValue = h1.getHash(value);
+  if(h1->searchElementinTable(value) == -1){
+  int hashValue = h1->getHash(value);
   int originalValue = hashValue;
-      if(h1.table.at(hashValue) == NULL){//NULL or Deleted
-            h1.table.at(hashValue) = new struct entry;
-            h1.table.at(hashValue)->str = value;
-            h1.table.at(hashValue)->frequency = 1;
-            h1.table.at(hashValue)->indexArray = vdata.size() - 1;;
+      if(h1->table.at(hashValue)->str == "NULL"){//NULL or Deleted
+            h1->table.at(hashValue) = new struct entry;
+            h1->table.at(hashValue)->str = value;
+            h1->table.at(hashValue)->frequency = 1;
+            h1->table.at(hashValue)->indexArray = vdata.size() - 1;;
         }else{
-            for (int j = 1; j < h1.table.size(); j++){
-              int t = ((hashValue + (j * j)) % h1.table.size());
-              if (h1.table.at(t) == NULL){
-                    h1.table.at(hashValue) = new struct entry;
-                    h1.table.at(hashValue)->str = value;
-                    h1.table.at(hashValue)->frequency = 1;
-                    h1.table.at(hashValue)->indexArray = vdata.size() - 1;;
+            for (int j = 1; j < h1->table.size(); j++){
+              int t = ((hashValue + (j * j)) % h1->table.size());
+              if (h1->table.at(t) == NULL){
+                    h1->table.at(hashValue) = new struct entry;
+                    h1->table.at(hashValue)->str = value;
+                    h1->table.at(hashValue)->frequency = 1;
+                    h1->table.at(hashValue)->indexArray = vdata.size() - 1;;
                     break;
                 }else if(originalValue == t){
                     // this is the case where table is full
@@ -279,15 +285,15 @@ void minHeap::popMin(){
     }
   }
 // Delete Element in Hashtable
-    int hashValue = h1.getHash(str);
+    int hashValue = h1->getHash(str);
     int originalValue = hashValue;
-      if(h1.table.at(hashValue)->str == str){//NULL or Deleted
-            delete h1.table[hashValue];
+      if(h1->table.at(hashValue)->str == str){//NULL or Deleted
+            delete h1->table[hashValue];
         }else{
-            for (int j = 1; j < h1.table.size(); j++){
-              int t = ((hashValue + (j * j)) % h1.table.size());
-              if (h1.table.at(t)->str == str){
-                  delete h1.table[hashValue];
+            for (int j = 1; j < h1->table.size(); j++){
+              int t = ((hashValue + (j * j)) % h1->table.size());
+              if (h1->table.at(t)->str == str){
+                  delete h1->table[hashValue];
                 }
             }
         }

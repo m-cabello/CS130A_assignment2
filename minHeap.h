@@ -42,6 +42,6 @@ class minHeap{
     string printHeap(); // prints "String:Frequency"
  private:
     std::vector<entry*> vdata;
-    HashTable h1; //Initializes a hastable as soon as a heap is created
+    HashTable * h1; //Initializes a hastable as soon as a heap is created
     int size; // how many of the nodes are valid, non-empty, vdata.size() returns the size of the vector
 };
