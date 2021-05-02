@@ -100,6 +100,21 @@ bool minHeap::isFull(){
     return false;
   }
 }
+// returns lesser entry
+entry* minHeap::compareEntries(entry* e1, entry* e2){
+  if(e1->frequency > e2->frequency){
+    return e2;
+  }else if(e1->frequency < e2->frequency){
+    return e1;
+  }else{
+    if(e1->ageCounter > e2->ageCounter){
+      return e2;
+    }else{
+      return e1;
+    }
+  }
+}
+
 string minHeap::printHeap(){
   ostringstream out;
     for(int i = 0; i < vdata.size(); i++){
@@ -123,7 +138,7 @@ void minHeap::insert(string value){
             //key to parent node
             int p = (i-1)/2;
             //if the parent key is greater than the key of the node inserted, bubble up!
-            if(vdata[i]<vdata[p]){
+            if(vdata[i]->ageCounter<vdata[p]->frequency){
                 vdata[i] = vdata[p];
                 vdata[p]->str = value;
                 i = p;
@@ -146,7 +161,7 @@ void minHeap::insert(string value){
             //key to parent node
             int p = (i-1)/2;
             //if the parent key is greater than the key of the node inserted, bubble up!
-            if(vdata[i]<vdata[p]){
+            if(vdata[i]->frequency<vdata[p]->frequency){
                 vdata[i] = vdata[p];
                 vdata[p]->str = value;
                 i = p;
@@ -215,7 +230,7 @@ void minHeap::popMin(){
       }
       //if a complete bst is not in the correct formatt, 
       //when the right child has the largest value out of the parent and the left child ,bubble down the left side.
-      if(vdata[left]<=vdata[right]){
+      if(vdata[left]->frequency<=vdata[right]->frequency){
         swap(vdata[left], vdata[i]);
       //else, if the left child has the largest value, bubble down the right side.
       }else{
@@ -228,7 +243,7 @@ void minHeap::popMin(){
               break;
           }else{
               //if both children are larger, don't do anything!
-              if(vdata[i]<=vdata[left] && vdata[i]<=vdata[right]){
+              if(vdata[i]->frequency<=vdata[left]->frequency && vdata[i]->frequency<=vdata[right]->frequency){
                 break;
               }
             swap(vdata[left], vdata[i]);
