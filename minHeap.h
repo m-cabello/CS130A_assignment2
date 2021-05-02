@@ -19,7 +19,10 @@ public:
   HashTable(int k = 0);
   // Hash function to calculate hash for a value:
   int getHash(string key);
-  int getSize();
+  void setTotalElements(int k);
+  void setTableSize();
+  int getTableSize();
+  int getTotalElements();
   int searchElementinTable(string key);
   int searchElementinArray(string key);
   std::vector<entry*> table;

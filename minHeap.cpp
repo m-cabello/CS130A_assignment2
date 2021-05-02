@@ -31,9 +31,37 @@ int HashTable::getHash(string key){
     hash<string> hash_string;
     return (hash_string(key) % total_elements); 
 }
-int HashTable::getSize(){
+int HashTable::getTotalElements(){
     return total_elements;
 }
+int HashTable::getTableSize(){
+    return tableSize;
+}
+void HashTable::setTotalElements(int k){
+  total_elements = k;
+}
+void HashTable::setTableSize(){
+int k = total_elements;
+int firstPrime = 2 * k; 
+	  int i,j,count=0,b=0;
+	  for(i=firstPrime;i>0;i++){
+		  for(j=2;j<=i/2;j++){
+			  if(i%j==0){
+				  b=1;
+				  break;
+			  }
+		  } 
+		if(b==0){
+      tableSize = i;
+			count++;
+		}
+		b=0;
+		if(count==1)
+			break;
+	  }
+    table.resize(tableSize);
+}
+
 int HashTable::searchElementinTable(string key){
     // cout << getHash(key) << endl;
     int hashValue = getHash(key);
@@ -82,17 +110,17 @@ int HashTable::searchElementinArray(string key){
         }
 }
 // min Heap Definitions
-
 minHeap::minHeap(int k){
     size = 0;
     vdata.resize(k);
     HashTable h1(k);
+    //h1.setTotalElements(k);
+    //h1.setTableSize();
 }
 
 int minHeap::getSize(){
   return size;
 }
-
 bool minHeap::isFull(){
   if(size == vdata.size()){
     return true;
@@ -114,7 +142,6 @@ entry* minHeap::compareEntries(entry* e1, entry* e2){
     }
   }
 }
-
 string minHeap::printHeap(){
   ostringstream out;
     for(int i = 0; i < vdata.size(); i++){
@@ -127,10 +154,11 @@ void minHeap::insert(string value){
   if (h1.searchElementinTable(value) == -1){
       int i = vdata.size();
       // check if there is space in the table *check THIS IF STATEMENT*
-      if(i != h1.getSize()){
+      if(i != h1.getTableSize()){
         entry * e1;
         e1->str = value;
         e1->frequency = 1;
+        e1->ageCounter = 1;
         e1->indexArray = vdata.size() - 1;
         vdata.push_back(e1);
             // perculate up
@@ -138,7 +166,7 @@ void minHeap::insert(string value){
             //key to parent node
             int p = (i-1)/2;
             //if the parent key is greater than the key of the node inserted, bubble up!
-            if(vdata[i]->ageCounter<vdata[p]->frequency){
+            if(vdata[i]->frequency<vdata[p]->frequency){
                 vdata[i] = vdata[p];
                 vdata[p]->str = value;
                 i = p;
@@ -154,6 +182,7 @@ void minHeap::insert(string value){
           entry * e1;
           e1->str = value;
           e1->frequency = freq + 1;
+          e1->ageCounter = 1;
           e1->indexArray = vdata.size() - 1;
           vdata.push_back(e1);
           // perculate up
@@ -189,7 +218,7 @@ void minHeap::insert(string value){
       if(h1.table.at(hashValue) == NULL){//NULL or Deleted
             h1.table.at(hashValue) = new struct entry;
             h1.table.at(hashValue)->str = value;
-            h1.table.at(hashValue)->frequency += 1;
+            h1.table.at(hashValue)->frequency = 1;
             h1.table.at(hashValue)->indexArray = vdata.size() - 1;;
         }else{
             for (int j = 1; j < h1.table.size(); j++){
