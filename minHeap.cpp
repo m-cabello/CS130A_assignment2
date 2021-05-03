@@ -100,7 +100,7 @@ int HashTable::searchElementinArray(string key){
               if (table.at(t)->str == key){
                     return table.at(t)->indexArray;
                 }
-              if (table.at(t) == NULL){
+              if (table.at(t)->str == "NULL"){
                     return -1;
                 }
               if (originalValue == t){
@@ -223,7 +223,7 @@ void minHeap::insert(string value){
         }else{
             for (int j = 1; j < h1->table.size(); j++){
               int t = ((hashValue + (j * j)) % h1->table.size());
-              if (h1->table.at(t) == NULL){
+              if (h1->table.at(t)->str == "NULL"){
                     h1->table.at(hashValue) = new struct entry;
                     h1->table.at(hashValue)->str = value;
                     h1->table.at(hashValue)->frequency = 1;

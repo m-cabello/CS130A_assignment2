@@ -27,18 +27,21 @@ int main(int argc, char** argv){
   int k = stoi(argv[3]);
   minHeap heap1(k);
   string line;
-    if (stringFile.is_open()){
-        while (getline(stringFile,line, ',')){
-                heap1.insert(line); 
-              }
-    }
+    // if (stringFile.is_open()){
+    //     while (getline(stringFile,line, ',')){
+    //             heap1.insert(line); 
+    //           }
+    // }
 
 
-// heap1.insert("nick");
-// heap1.insert("zack");
-// heap1.insert("omar");
-// heap1.insert("martin");
-
+heap1.insert("nick");
+heap1.insert("zack");
+heap1.insert("omar");
+heap1.insert("martin");
+heap1.insert("josh");
+heap1.insert("kuz");
+heap1.insert("kyle");
+heap1.insert("omar");
 
   stringFile.close();
 
