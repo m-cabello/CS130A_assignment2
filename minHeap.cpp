@@ -152,8 +152,6 @@ while(i!=0){
 //key to parent node
 int p = (i-1)/2;
 //if the parent key is greater than the key of the node inserted, bubble up!
-//cout << vdata[p]->str << vdata[p]->ageCounter << endl;
-//cout << vdata[i]->str << vdata[i]->ageCounter << endl;
 if(compareEntries(vdata[p],vdata[i])){
     swap(vdata[i], vdata[p]);
     i = p;
@@ -282,53 +280,25 @@ void minHeap::popMin(){
   vdata[0] = vdata[vdata.size()-1];
   //delete the rightmost value
   vdata.erase(vdata.end()-1);
-  int i = 0;
-  while(true){
-    int left = (2*i)+1;
-    int right = (2*i)+2;
-    //the left and right index should be smaller than the size of the vector. If not, break!
-    if( (left < vdata.size()) && (right < vdata.size()) ){
-      //if both children are larger than the parent, nothing needs to be done!
-      if(compareEntries(vdata[left], vdata[i]) && compareEntries(vdata[right], vdata[i])){
-          break;
-        }
-      //when the right child has the largest value out of the parent and the left child ,bubble down the left side.
-      if(compareEntries(vdata[right],vdata[left]) ){
-        swap(vdata[left], vdata[i]);
-      //else, if the left child has the largest value, bubble down the right side.
-      }else{
-         swap(vdata[right], vdata[i]);
-      }
-    }
-    //the left and right index should be smaller than the size of the vector. If not, break,. nothing needs to be done.
-    else if(right >= vdata.size() && left >= vdata.size()){
-              break;
-          }else{
-              //if both children are larger, don't do anything!
-              if(compareEntries(vdata[left], vdata[i]) && compareEntries(vdata[right], vdata[i])){
-                break;
-              }
-            swap(vdata[left], vdata[i]);
-    }
-      break;
-  }
-// Delete Element in Hashtable
-    int hashValue = h1->getHash(str);
-    int originalValue = hashValue;
-      if(h1->table.at(hashValue)->str == str){//NULL or Deleted
-            h1->table[hashValue]->str = "NULL";
-            h1->table[hashValue]->frequency = 0;
-            h1->table[hashValue]->indexArray = 0;
-            h1->table[hashValue]->ageCounter = 0;
-        }else{
-            for (int j = 1; j < h1->table.size(); j++){
-              int t = ((hashValue + (j * j)) % h1->table.size());
-              if (h1->table.at(t)->str == str){
-                  h1->table[t]->str = "NULL";
-                  h1->table[t]->frequency = 0;
-                  h1->table[t]->indexArray = 0;
-                  h1->table[t]->ageCounter = 0;                }
-            }
-        }
+  perculateDown();
 
+  // Delete Element in Hashtable
+  int hashValue = h1->getHash(str);
+  int originalValue = hashValue;
+      if(h1->table.at(hashValue)->str == str){//NULL or Deleted
+          h1->table[hashValue]->str = "NULL";
+          h1->table[hashValue]->frequency = 0;
+          h1->table[hashValue]->indexArray = 0;
+          h1->table[hashValue]->ageCounter = 0;
+      }else{
+          for (int j = 1; j < h1->table.size(); j++){
+            int t = ((hashValue + (j * j)) % h1->table.size());
+            if (h1->table.at(t)->str == str){
+              h1->table[t]->str = "NULL";
+              h1->table[t]->frequency = 0;
+              h1->table[t]->indexArray = 0;
+              h1->table[t]->ageCounter = 0;                
+            }
+          }
+      }
 }

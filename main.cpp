@@ -47,6 +47,5 @@ int main(int argc, char** argv){
   myfile.open(argv[2]);
   myfile << heap1.printHeap();
   myfile.close();
-  // heap1.printHeap();
   return 0;
 }
