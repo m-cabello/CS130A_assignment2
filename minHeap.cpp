@@ -130,20 +130,70 @@ bool minHeap::isFull(){
     return false;
   }
 }
-// returns lesser entry
-entry* minHeap::compareEntries(entry* e1, entry* e2){
+bool minHeap::compareEntries(entry* e1, entry* e2){
   if(e1->frequency > e2->frequency){
-    return e2;
+    return true;
   }else if(e1->frequency < e2->frequency){
-    return e1;
+    return false;
   }else{
-    if(e1->ageCounter > e2->ageCounter){
-      return e2;
+    if(e1->ageCounter < e2->ageCounter){
+      return true;
     }else{
-      return e1;
+      return false;
     }
   }
 }
+
+void minHeap::perculateUp(){
+int i = vdata.size() - 1;
+// perculate up
+while(i!=0){
+//key to parent node
+int p = (i-1)/2;
+//if the parent key is greater than the key of the node inserted, bubble up!
+if(compareEntries(vdata[p],vdata[i])){
+    swap(vdata[i], vdata[p]);
+    i = p;
+}else{
+    break;
+  }
+}
+}
+//Cant Swap: Reach Bottom, Hit a value that there is no need to swap
+void minHeap::perculateDown(){
+int i = 0;
+  //bubbleling up
+  while(true){
+    int left = (2*i)+1;
+    int right = (2*i)+2;
+    //the left and right index should be smaller than the size of the vector. If not, break!
+    if( (left < vdata.size()) && (right < vdata.size()) ){
+      //if both children are larger than the parent, nothing needs to be done!
+      if(compareEntries(vdata[left], vdata[i]) && compareEntries(vdata[right], vdata[i])){
+          break;
+        }
+      //when the right child has the largest value out of the parent and the left child ,bubble down the left side.
+      if(compareEntries(vdata[right],vdata[left]) ){
+        swap(vdata[left], vdata[i]);
+      //else, if the left child has the largest value, bubble down the right side.
+      }else{
+         swap(vdata[right], vdata[i]);
+      }
+    }
+    //the left and right index should be smaller than the size of the vector. If not, break,. nothing needs to be done.
+    else if(right >= vdata.size() && left >= vdata.size()){
+              break;
+          }else{
+              //if both children are larger, don't do anything!
+              if(compareEntries(vdata[left], vdata[i]) && compareEntries(vdata[right], vdata[i])){
+                break;
+              }
+            //swap(vdata[left], vdata[i]);
+            break;
+    }
+  }
+}
+
 string minHeap::printHeap(){
   ostringstream out;
     for(int i = 0; i < vdata.size(); i++){
@@ -164,50 +214,25 @@ void minHeap::insert(string value){
         e1->indexArray = vdata.size() - 1;
         vdata.push_back(e1);
         size++;
-            // perculate up
-            while(i!=1){
-            //key to parent node
-            int p = (i-1)/2;
-            //if the parent key is greater than the key of the node inserted, bubble up!
-            if(vdata[i]->frequency<vdata[p]->frequency){
-                vdata[i] = vdata[p];
-                vdata[p]->str = value;
-                i = p;
-            }else{
-                break;
-            }
-          }
+        perculateUp();
       // If there is no space on the table, then delete the min value(the root)
       }else{
           int freq = vdata[0]->frequency;
           popMin();
-          int i = vdata.size();
           entry *e1 = new struct entry;        
           e1->str = value;
           e1->frequency = freq + 1;
           e1->ageCounter = 1;
           e1->indexArray = vdata.size() - 1;
           vdata.push_back(e1);
-          // perculate up
-          while(i!=0){
-            //key to parent node
-            int p = (i-1)/2;
-            //if the parent key is greater than the key of the node inserted, bubble up!
-            if(vdata[i]->frequency<vdata[p]->frequency){
-                vdata[i] = vdata[p];
-                vdata[p]->str = value;
-                i = p;
-            }else{
-                break;
-            }
-          }
+          perculateUp();
       }
     //Check if the element is on the table, Increase frequency on both table and minHeap
     }else{
       int num = h1->searchElementinTable(value);
       h1->table.at(num)->frequency++;
       vdata.at(h1->searchElementinArray(value))->frequency ++;
-
+      perculateDown();
   }
 
 //Insert Element in Table
@@ -237,7 +262,13 @@ void minHeap::insert(string value){
                 }
             }
         }
-    }     
+    }
+    //Print array after every insert
+    for(int i = 0; i < vdata.size(); i++){
+      cout << vdata.at(i)->str << ":" << vdata.at(i)->frequency << ",";
+    }
+      cout << endl;
+         
 }
 
 void minHeap::popMin(){
@@ -257,7 +288,6 @@ void minHeap::popMin(){
       if(vdata[i]<=vdata[left] && vdata[i]<=vdata[right]){
           break;
       }
-      //if a complete bst is not in the correct formatt, 
       //when the right child has the largest value out of the parent and the left child ,bubble down the left side.
       if(vdata[left]->frequency<=vdata[right]->frequency){
         swap(vdata[left], vdata[i]);
