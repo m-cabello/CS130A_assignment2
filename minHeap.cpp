@@ -282,37 +282,19 @@ void minHeap::popMin(){
     int hashValue = h1->getHash(str);
     int originalValue = hashValue;
       if(h1->table.at(hashValue)->str == str){//NULL or Deleted
-            delete h1->table[hashValue];
+            h1->table[hashValue]->str = "NULL";
+            h1->table[hashValue]->frequency = 0;
+            h1->table[hashValue]->indexArray = 0;
+            h1->table[hashValue]->ageCounter = 0;
         }else{
             for (int j = 1; j < h1->table.size(); j++){
               int t = ((hashValue + (j * j)) % h1->table.size());
               if (h1->table.at(t)->str == str){
-                  delete h1->table[hashValue];
-                }
+                  h1->table[t]->str = "NULL";
+                  h1->table[t]->frequency = 0;
+                  h1->table[t]->indexArray = 0;
+                  h1->table[t]->ageCounter = 0;                }
             }
         }
 
 }
-
-
-// Extra Code for insert
-/*
-}else if(originalValue == t){
-                    // this is the case where table is full
-                    int minimumValue = -1;
-                    for(int i = 0; i < h1.table.size();i++){
-                      if(h1.table.at(i)->frequency > minimumValue){
-                        minimumValue = h1.table.at(i)->frequency;
-                      }
-                    }
-                    int index = 0;
-                    for(int j = 0; j < h1.table.size();j++){
-                      if(h1.table.at(j)->frequency == minimumValue){
-                        index = j;                      
-                      }
-                    }
-                    string str = h1.table.at(index)->str;
-                    h1.deleteElement(str);
-                    h1.insertElement(value);
-                    break;
-*/
