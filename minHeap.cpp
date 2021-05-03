@@ -113,6 +113,7 @@ int HashTable::searchElementinArray(string key){
 }
 // min Heap Definitions
 minHeap::minHeap(int k){
+    inserted = 0;
     size = 0;
     vdata.resize(0);
     h1 = new HashTable(k);
@@ -151,6 +152,8 @@ while(i!=0){
 //key to parent node
 int p = (i-1)/2;
 //if the parent key is greater than the key of the node inserted, bubble up!
+//cout << vdata[p]->str << vdata[p]->ageCounter << endl;
+//cout << vdata[i]->str << vdata[i]->ageCounter << endl;
 if(compareEntries(vdata[p],vdata[i])){
     swap(vdata[i], vdata[p]);
     i = p;
@@ -188,9 +191,9 @@ int i = 0;
               if(compareEntries(vdata[left], vdata[i]) && compareEntries(vdata[right], vdata[i])){
                 break;
               }
-            //swap(vdata[left], vdata[i]);
-            break;
+            swap(vdata[left], vdata[i]);
     }
+      break;
   }
 }
 
@@ -210,10 +213,11 @@ void minHeap::insert(string value){
         entry *e1 = new struct entry;        
         e1->str = value;
         e1->frequency = 1;
-        e1->ageCounter = 1;
+        e1->ageCounter = i + 1;
         e1->indexArray = vdata.size() - 1;
         vdata.push_back(e1);
         size++;
+        inserted++;
         perculateUp();
       // If there is no space on the table, then delete the min value(the root)
       }else{
@@ -222,7 +226,8 @@ void minHeap::insert(string value){
           entry *e1 = new struct entry;        
           e1->str = value;
           e1->frequency = freq + 1;
-          e1->ageCounter = 1;
+          inserted++;
+          e1->ageCounter = inserted;
           e1->indexArray = vdata.size() - 1;
           vdata.push_back(e1);
           perculateUp();
@@ -278,23 +283,21 @@ void minHeap::popMin(){
   //delete the rightmost value
   vdata.erase(vdata.end()-1);
   int i = 0;
-  //bubbleling up
   while(true){
     int left = (2*i)+1;
     int right = (2*i)+2;
     //the left and right index should be smaller than the size of the vector. If not, break!
-    if( ( left < vdata.size() ) && ( right < vdata.size() ) ){
+    if( (left < vdata.size()) && (right < vdata.size()) ){
       //if both children are larger than the parent, nothing needs to be done!
-      if(vdata[i]<=vdata[left] && vdata[i]<=vdata[right]){
+      if(compareEntries(vdata[left], vdata[i]) && compareEntries(vdata[right], vdata[i])){
           break;
-      }
+        }
       //when the right child has the largest value out of the parent and the left child ,bubble down the left side.
-      if(vdata[left]->frequency<=vdata[right]->frequency){
+      if(compareEntries(vdata[right],vdata[left]) ){
         swap(vdata[left], vdata[i]);
       //else, if the left child has the largest value, bubble down the right side.
       }else{
          swap(vdata[right], vdata[i]);
-
       }
     }
     //the left and right index should be smaller than the size of the vector. If not, break,. nothing needs to be done.
@@ -302,11 +305,12 @@ void minHeap::popMin(){
               break;
           }else{
               //if both children are larger, don't do anything!
-              if(vdata[i]->frequency<=vdata[left]->frequency && vdata[i]->frequency<=vdata[right]->frequency){
+              if(compareEntries(vdata[left], vdata[i]) && compareEntries(vdata[right], vdata[i])){
                 break;
               }
             swap(vdata[left], vdata[i]);
     }
+      break;
   }
 // Delete Element in Hashtable
     int hashValue = h1->getHash(str);
