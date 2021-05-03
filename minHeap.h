@@ -34,6 +34,7 @@ private:
 class minHeap{
  public:
     minHeap(int k = 0);
+    void insertHashTable(string value);
     void insert(string value); //inserts element in the heap, then on the hashTable
     void popMin();  //delets min value, replaces it with furthest value to the right and then perculates down, then deletes value in the hashtable too
     bool isFull(); // checks if size is full
