@@ -32,7 +32,14 @@ int main(int argc, char** argv){
                 heap1.insert(line); 
               }
     }
-  
+
+
+// heap1.insert("nick");
+// heap1.insert("zack");
+// heap1.insert("omar");
+// heap1.insert("martin");
+
+
   stringFile.close();
 
   // Writting to File

@@ -70,11 +70,7 @@ int firstPrime = 2 * k;
 int HashTable::searchElementinTable(string key){
     int hashValue = getHash(key);
     int originalValue = hashValue;
-      if(table.at(hashValue)->str == "NULL"){
-        return -1;
-      }
       if(table.at(hashValue)->str == key){//NULL or Deleted
-            cout << "hey2" << endl;
             return hashValue;
         }else{
             for (int j = 1; j < total_elements; j++){
@@ -159,14 +155,15 @@ void minHeap::insert(string value){
   //Element not on table
   if (h1->searchElementinTable(value) == -1){
       int i = vdata.size();
-      // check if there is space in the table *check THIS IF STATEMENT*
-      if(i != h1->getTableSize()){
+      // check if there is space in the table 
+      if(size < (h1->getTotalElements()) ){
         entry *e1 = new struct entry;        
         e1->str = value;
         e1->frequency = 1;
         e1->ageCounter = 1;
         e1->indexArray = vdata.size() - 1;
         vdata.push_back(e1);
+        size++;
             // perculate up
             while(i!=1){
             //key to parent node
@@ -185,7 +182,7 @@ void minHeap::insert(string value){
           int freq = vdata[0]->frequency;
           popMin();
           int i = vdata.size();
-          entry * e1;
+          entry *e1 = new struct entry;        
           e1->str = value;
           e1->frequency = freq + 1;
           e1->ageCounter = 1;
@@ -205,18 +202,15 @@ void minHeap::insert(string value){
             }
           }
       }
-    //Check if the element is on the table, Increase frequency
+    //Check if the element is on the table, Increase frequency on both table and minHeap
     }else{
       int num = h1->searchElementinTable(value);
-      vdata.at(num)->frequency ++;
+      h1->table.at(num)->frequency++;
+      vdata.at(h1->searchElementinArray(value))->frequency ++;
+
   }
 
 //Insert Element in Table
-// Check if element is already in the table
-  if(h1->searchElementinTable(value) != -1){ 
-    int num = h1->searchElementinTable(value);
-    h1->table[num]->frequency++;
-  }
   // Element not on table
   if(h1->searchElementinTable(value) == -1){
   int hashValue = h1->getHash(value);
