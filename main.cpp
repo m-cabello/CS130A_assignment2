@@ -27,20 +27,18 @@ int main(int argc, char** argv){
   int k = stoi(argv[3]);
   minHeap heap1(k);
   string line;
-    // if (stringFile.is_open()){
-    //     while (getline(stringFile,line, ',')){
-    //             heap1.insert(line); 
-    //           }
-    // }
+    if (stringFile.is_open()){
+        while (getline(stringFile,line, ',')){
+                heap1.insert(line); 
+              }
+    }
 
-heap1.insert("pine");
-heap1.insert("cat");
-heap1.insert("pear");
-heap1.insert("pine");
-heap1.insert("dog");
-heap1.insert("apple");
-
-
+// heap1.insert("pine");
+// heap1.insert("cat");
+// heap1.insert("pear");
+// heap1.insert("pine");
+// heap1.insert("dog");
+// heap1.insert("apple");
 
   stringFile.close();
 

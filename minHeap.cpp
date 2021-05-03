@@ -269,10 +269,10 @@ void minHeap::insert(string value){
         }
     }
     //Print array after every insert
-    for(int i = 0; i < vdata.size(); i++){
-      cout << vdata.at(i)->str << ":" << vdata.at(i)->frequency << ",";
-    }
-      cout << endl;
+    // for(int i = 0; i < vdata.size(); i++){
+    //   cout << vdata.at(i)->str << ":" << vdata.at(i)->frequency << ",";
+    // }
+    //   cout << endl;
          
 }
 
