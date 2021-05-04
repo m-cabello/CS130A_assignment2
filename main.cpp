@@ -33,19 +33,11 @@ int main(int argc, char** argv){
               }
     }
 
-// heap1.insert("pine");
-// heap1.insert("cat");
-// heap1.insert("pear");
-// heap1.insert("pine");
-// heap1.insert("dog");
-// heap1.insert("apple");
-
   stringFile.close();
-
   // Writting to File
   ofstream myfile;
   myfile.open(argv[2]);
-  myfile << heap1.printHeap();
+  myfile << heap1.printAscendingOrder();
   myfile.close();
   return 0;
 }

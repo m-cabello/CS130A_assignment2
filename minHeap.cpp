@@ -1,7 +1,13 @@
 #include "minHeap.h"
 using namespace std;
 // Hash Table Functions
-
+bool ascendingOrder(entry* e1, entry* e2) {
+    if(e1->frequency != e2->frequency){
+        return (e1->frequency < e2->frequency);
+    }else{
+        return (e1->ageCounter > e2->ageCounter);
+    }
+}
 HashTable::HashTable(int k){
     int firstPrime = 2 * k; 
 	  int i,j,count=0,b=0;
@@ -33,8 +39,10 @@ HashTable::HashTable(int k){
     total_elements = k;
 }
 int HashTable::getHash(string key){
-    hash<string> hash_string;
     return (hash_string(key) % tableSize); 
+}
+int HashTable::getStatus(){
+  return 0;
 }
 int HashTable::getTotalElements(){
     return total_elements;
@@ -68,11 +76,11 @@ int firstPrime = 2 * k;
 }
 int HashTable::searchElementinTable(string key){
     int hashValue = getHash(key);
-    int originalValue = hashValue;
-      if(table.at(hashValue)->str == key){//NULL or Deleted
+    //int originalValue = hashValue;
+      if(table.at(hashValue)->str == key){
             return hashValue;
         }else{
-            for (int j = 1; j < total_elements; j++){
+            for (int j = 1; j < tableSize; j++){
               int t = ((hashValue + (j * j)) % tableSize);
               if (table.at(t)->str == key){
                     return t;
@@ -80,10 +88,6 @@ int HashTable::searchElementinTable(string key){
               if (table.at(t)->str == "NULL"){
                     return -1;
                 }
-              if (originalValue == t){
-                    return -1;
-                }
-
             }
             return -1;
         }
@@ -94,7 +98,7 @@ int HashTable::searchElementinArray(string key){
       if(table.at(hashValue)->str == key){//NULL or Deleted
             return table.at(hashValue)->indexArray;
         }else{
-            for (int j = 1; j < total_elements; j++){
+            for (int j = 1; j < tableSize; j++){
               int t = ((hashValue + (j * j)) % tableSize);
               if (table.at(t)->str == key){
                     return table.at(t)->indexArray;
@@ -102,14 +106,17 @@ int HashTable::searchElementinArray(string key){
               if (table.at(t)->str == "NULL"){
                     return -1;
                 }
-              if (originalValue == t){
-                    return -1;
-                }
-
             }
             return -1;
         }
 }
+void minHeap::printHashTable(){
+  for(int i = 0; i < h1->getTableSize(); i++){
+    cout << h1->table[i]->str << "at" << i <<",";
+  }
+}
+
+
 // min Heap Definitions
 minHeap::minHeap(int k){
     inserted = 0;
@@ -119,6 +126,7 @@ minHeap::minHeap(int k){
     //h1.setTotalElements(k);
     //h1.setTableSize();
 }
+
 int minHeap::getSize(){
   return size;
 }
@@ -153,19 +161,22 @@ int minHeap::minChild(int index){
 void minHeap::insertHashTable(string value){
   // Insert in Hashtable
   int hashValue = h1->getHash(value);
-  if(h1->table.at(hashValue)->str == "NULL"){
+  //int originalValue = hashValue;
+  if((h1->table.at(hashValue)->str == "NULL") || (h1->table.at(hashValue)->str == "DELETED")){
     h1->table.at(hashValue) = new struct entry;
     h1->table.at(hashValue)->str = value;
     h1->table.at(hashValue)->frequency = 1;
     h1->table.at(hashValue)->indexArray = vdata.size() - 1;;
+    //cout << "Inserted"<< value << "in index:" << hashValue <<endl;
   }else{
       for (int j = 1; j < h1->table.size(); j++){
         int t = ((hashValue + (j * j)) % h1->table.size());
-        if (h1->table.at(t)->str == "NULL"){
-          h1->table.at(hashValue) = new struct entry;
-          h1->table.at(hashValue)->str = value;
-          h1->table.at(hashValue)->frequency = 1;
-          h1->table.at(hashValue)->indexArray = vdata.size() - 1;
+        if ((h1->table.at(t)->str == "NULL") || (h1->table.at(t)->str == "DELETED")){
+          h1->table.at(t) = new struct entry;
+          h1->table.at(t)->str = value;
+          h1->table.at(t)->frequency = 1;
+          h1->table.at(t)->indexArray = vdata.size() - 1;
+          //cout << "Inserted"<< value << "in index:" << t <<endl;
           break;
         }
     }
@@ -195,6 +206,8 @@ int p = (i-1)/2;
   if(compareEntries(vdata[p],vdata[i])){
     int a = h1->searchElementinTable(vdata[p]->str);
     int b = h1->searchElementinTable(vdata[i]->str);
+    //cout << a << endl;
+    //cout << b << endl;
     h1->table[a]->indexArray = i;
     h1->table[b]->indexArray = p;
     swap(vdata[i], vdata[p]);
@@ -207,25 +220,34 @@ int p = (i-1)/2;
 //Cant Swap: Reach Bottom, Hit a value that there is no need to swap
 void minHeap::perculateDown(int index){
   while( ((index * 2) + 1) <= vdata.size() - 1){
-    int mnc = minChild(index);
-    if((vdata[index]->frequency > vdata[mnc]->frequency) || ( (vdata[index]->frequency == vdata[mnc]->frequency) && (vdata[index]->ageCounter < vdata[mnc]->ageCounter) )){
-        int a = h1->searchElementinTable(vdata[mnc]->str);
+    int minc = minChild(index);
+    if((vdata[index]->frequency > vdata[minc]->frequency) || ( (vdata[index]->frequency == vdata[minc]->frequency) && (vdata[index]->ageCounter < vdata[minc]->ageCounter) )){
+        int a = h1->searchElementinTable(vdata[minc]->str);
         int b = h1->searchElementinTable(vdata[index]->str);
         h1->table[a]->indexArray = index;
-        h1->table[b]->indexArray = mnc;
-        swap(vdata[index], vdata[mnc]);
+        h1->table[b]->indexArray = minc;
+        swap(vdata[index], vdata[minc]);
     }
-    index = mnc;
+    index = minc;
   }
 }
 
 string minHeap::printHeap(){
   ostringstream out;
     for(int i = 0; i < vdata.size(); i++){
-      out << vdata.at(i)->str << ":" << vdata.at(i)->frequency << ",";
+      out << vdata.at(i)->str << ":" << to_string(vdata.at(i)->frequency) << ",";
     }
   return out.str();
 }
+string minHeap::printAscendingOrder(){
+  sort(vdata.begin(), vdata.end(), ascendingOrder);
+  ostringstream out;
+  for(int i = 0; i < vdata.size(); i++){
+    out << (vdata[i]->str) << ":" << to_string(vdata[i]->frequency) << ",";
+  }
+  return out.str();
+}
+
 void minHeap::insert(string value){
   //Element not on table
   if (h1->searchElementinTable(value) == -1){
@@ -241,7 +263,9 @@ void minHeap::insert(string value){
         size++;
         inserted++;
         insertHashTable(value);
+        //cout << "into perculateUp" <<endl;
         perculateUp();
+        //cout << "out of perculateUp" <<endl;
       // If there is no space on the table, then delete the min value(the root)
       }else{
           int freq = vdata[0]->frequency;
@@ -264,10 +288,12 @@ void minHeap::insert(string value){
       perculateDown(0);
   }
     //Print array after every insert
-    for(int i = 0; i < vdata.size(); i++){
-      cout << vdata.at(i)->str << ":" << vdata.at(i)->frequency << ",";
-    }
-      cout << endl;
+    // for(int i = 0; i < vdata.size(); i++){
+    //   cout << vdata.at(i)->str << ":" << vdata.at(i)->frequency << ",";
+    // }
+    //   cout << endl;
+    //printHashTable();
+    //cout << endl;
          
 }
 
@@ -280,8 +306,8 @@ void minHeap::popMin(){
   perculateDown(0);
   // Delete Element in Hashtable
   int hashValue = h1->getHash(str);
-      if(h1->table.at(hashValue)->str == str){//NULL or Deleted
-          h1->table[hashValue]->str = "NULL";
+      if(h1->table.at(hashValue)->str == str){
+          h1->table[hashValue]->str = "DELETED";
           h1->table[hashValue]->frequency = 0;
           h1->table[hashValue]->indexArray = 0;
           h1->table[hashValue]->ageCounter = 0;
@@ -289,10 +315,10 @@ void minHeap::popMin(){
           for (int j = 1; j < h1->table.size(); j++){
             int t = ((hashValue + (j * j)) % h1->table.size());
             if (h1->table.at(t)->str == str){
-              h1->table[t]->str = "NULL";
-              h1->table[t]->frequency = 0;
-              h1->table[t]->indexArray = 0;
-              h1->table[t]->ageCounter = 0;                
+              h1->table.at(t)->str = "DELETED";
+              h1->table.at(t)->frequency = 0;
+              h1->table.at(t)->indexArray = 0;
+              h1->table.at(t)->ageCounter = 0;                
             }
           }
       }
@@ -346,29 +372,6 @@ void minHeap::popMin(){
 //     }
 //   }
 // }
-
-// void minHeap::perculateUp(){
-// int i = vdata.size() - 1;
-// // perculate up
-// while(i!=0){
-// //key to parent node
-// int p = (i-1)/2;
-// cout << vdata[p]->frequency <<endl;
-// cout << vdata[i]->frequency <<endl;
-// //if the parent key is greater than the key of the node inserted, bubble up!
-// if(compareEntries(vdata[p],vdata[i])){
-//     int a = h1->searchElementinTable(vdata[p]->str);
-//     int b = h1->searchElementinTable(vdata[i]->str);
-//     h1->table[a]->indexArray = i;
-//     h1->table[b]->indexArray = p;
-//     swap(vdata[i], vdata[p]);
-//     i = p;
-// }else{
-//     break;
-//   }
-// }
-// }
-
 
 // void minHeap::perculateUp(int index){
 //   int p = (index-1)/2;

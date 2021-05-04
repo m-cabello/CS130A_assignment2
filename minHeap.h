@@ -19,6 +19,7 @@ public:
   HashTable(int k = 0);
   // Hash function to calculate hash for a value:
   int getHash(string key);
+  int getStatus();
   void setTotalElements(int k);
   void setTableSize();
   int getTableSize();
@@ -29,6 +30,7 @@ public:
 private:
   int total_elements; // actual elements in array
   int tableSize;      // size of table
+  hash<string> hash_string; // hashFunction
 };
 
 class minHeap{
@@ -44,6 +46,8 @@ class minHeap{
     void perculateUp();
     void perculateDown(int index);
     string printHeap(); // prints "String:Frequency"
+    string printAscendingOrder();
+    void printHashTable(); 
  private:
     std::vector<entry*> vdata;
     HashTable * h1; //Initializes a hastable as soon as a heap is created
