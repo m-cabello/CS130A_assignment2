@@ -129,6 +129,27 @@ bool minHeap::isFull(){
     return false;
   }
 }
+int minHeap::minChild(int index){
+  int left = (2*index)+1;
+  int right = (2*index)+2;
+  if(right >= vdata.size()){
+    return left;
+  }else{
+    if(vdata[left]->frequency < vdata[right]->frequency){
+      return left;
+    }else if(vdata[left]->frequency > vdata[right]->frequency){
+      return right;
+    }else if(vdata[left]->frequency == vdata[right]->frequency){
+        if(vdata[left]->ageCounter > vdata[right]->ageCounter){
+          return left;
+        }else{
+          return right;
+        }
+    }
+  }
+  return 0;
+}
+
 void minHeap::insertHashTable(string value){
   // Insert in Hashtable
   int hashValue = h1->getHash(value);
@@ -184,52 +205,17 @@ if(compareEntries(vdata[p],vdata[i])){
 }
 }
 //Cant Swap: Reach Bottom, Hit a value that there is no need to swap
-void minHeap::perculateDown(){
-int i = 0;
-  //bubbleling up
-  while(true){
-    int left = (2*i)+1;
-    int right = (2*i)+2;
-    //the left and right index should be smaller than the size of the vector. If not, break!
-    if( (left < vdata.size()) && (right < vdata.size()) ){
-      //if both children are larger than the parent, nothing needs to be done!
-      if(compareEntries(vdata[left], vdata[i]) && compareEntries(vdata[right], vdata[i])){
-          break;
-        }
-      //when the right child has the largest value out of the parent and the left child ,bubble down the left side.
-      if(compareEntries(vdata[right],vdata[left]) ){
-        int a = h1->searchElementinTable(vdata[i]->str);
-        int b = h1->searchElementinTable(vdata[left]->str);
-        h1->table[a]->indexArray = left;
-        h1->table[b]->indexArray = i;
-        swap(vdata[left], vdata[i]);
-        i = left;
-      //else, if the left child has the largest value, bubble down the right side.
-      }else{
-          int a = h1->searchElementinTable(vdata[i]->str);
-          int b = h1->searchElementinTable(vdata[right]->str);
-          h1->table[a]->indexArray = right;
-          h1->table[b]->indexArray = i;
-          swap(vdata[right], vdata[i]);
-          i = right;
-
-      }
+void minHeap::perculateDown(int index){
+  while( ((index * 2) + 1) <= vdata.size() - 1){
+    int mnc = minChild(index);
+    if((vdata[index]->frequency > vdata[mnc]->frequency) || ( (vdata[index]->frequency == vdata[mnc]->frequency) && (vdata[index]->ageCounter < vdata[mnc]->ageCounter) )){
+        int a = h1->searchElementinTable(vdata[mnc]->str);
+        int b = h1->searchElementinTable(vdata[index]->str);
+        h1->table[a]->indexArray = index;
+        h1->table[b]->indexArray = mnc;
+        swap(vdata[index], vdata[mnc]);
     }
-    //the left and right index should be smaller than the size of the vector. If not, break,. nothing needs to be done.
-    else if(right >= vdata.size() && left >= vdata.size()){
-              break;
-          }else{
-              //if both children are larger, don't do anything!
-              if(compareEntries(vdata[left], vdata[i]) && compareEntries(vdata[right], vdata[i])){
-                break;
-              }
-            int a = h1->searchElementinTable(vdata[i]->str);
-            int b = h1->searchElementinTable(vdata[left]->str);
-            h1->table[a]->indexArray = left;
-            h1->table[b]->indexArray = i;
-            swap(vdata[left], vdata[i]);
-            i = left;
-    }
+    index = mnc;
   }
 }
 
@@ -259,17 +245,7 @@ void minHeap::insert(string value){
       // If there is no space on the table, then delete the min value(the root)
       }else{
           int freq = vdata[0]->frequency;
-          // cout << "before popMin"<<endl;
-          // for(int i = 0; i < vdata.size(); i++){
-          // cout << vdata.at(i)->str << ":" << vdata.at(i)->frequency << ",";
-          // }
-          // cout << endl;
           popMin();
-          // cout << "After popMin"<<endl;
-          // for(int i = 0; i < vdata.size(); i++){
-          // cout << vdata.at(i)->str << ":" << vdata.at(i)->frequency << ",";
-          // }
-          // cout << endl;
           entry *e1 = new struct entry;        
           e1->str = value;
           e1->frequency = freq + 1;
@@ -285,7 +261,7 @@ void minHeap::insert(string value){
       int num = h1->searchElementinTable(value);
       h1->table.at(num)->frequency++;
       vdata.at(h1->searchElementinArray(value))->frequency ++;
-      perculateDown();
+      perculateDown(0);
   }
     //Print array after every insert
     // for(int i = 0; i < vdata.size(); i++){
@@ -301,10 +277,9 @@ void minHeap::popMin(){
   vdata[0] = vdata[vdata.size()-1];
   //delete the rightmost value
   vdata.erase(vdata.end()-1);
-  perculateDown();
+  perculateDown(0);
   // Delete Element in Hashtable
   int hashValue = h1->getHash(str);
-  int originalValue = hashValue;
       if(h1->table.at(hashValue)->str == str){//NULL or Deleted
           h1->table[hashValue]->str = "NULL";
           h1->table[hashValue]->frequency = 0;
@@ -323,3 +298,88 @@ void minHeap::popMin(){
       }
 }
 
+
+// void minHeap::perculateDown(){
+// int i = 0;
+//   //bubbleling up
+//   while(true){
+//     int left = (2*i)+1;
+//     int right = (2*i)+2;
+//     //the left and right index should be smaller than the size of the vector. If not, break!
+//     if( (left < vdata.size()) && (right < vdata.size()) ){
+//       //if both children are larger than the parent, nothing needs to be done!
+//       if(compareEntries(vdata[left], vdata[i]) && compareEntries(vdata[right], vdata[i])){
+//           break;
+//         }
+//       //when the right child has the largest value out of the parent and the left child ,bubble down the left side.
+//       if(compareEntries(vdata[right],vdata[left]) ){
+//         int a = h1->searchElementinTable(vdata[i]->str);
+//         int b = h1->searchElementinTable(vdata[left]->str);
+//         h1->table[a]->indexArray = left;
+//         h1->table[b]->indexArray = i;
+//         swap(vdata[left], vdata[i]);
+//         i = left;
+//       //else, if the left child has the largest value, bubble down the right side.
+//       }else{
+//           int a = h1->searchElementinTable(vdata[i]->str);
+//           int b = h1->searchElementinTable(vdata[right]->str);
+//           h1->table[a]->indexArray = right;
+//           h1->table[b]->indexArray = i;
+//           swap(vdata[right], vdata[i]);
+//           i = right;
+//       }
+//     }
+//     //the left and right index should be smaller than the size of the vector. If not, break,. nothing needs to be done.
+//     else if(right >= vdata.size() && left >= vdata.size()){
+//               break;
+//           }else{
+//               //if both children are larger, don't do anything!
+//               if(compareEntries(vdata[left], vdata[i]) && compareEntries(vdata[right], vdata[i])){
+//                 break;
+//               }
+//             int a = h1->searchElementinTable(vdata[i]->str);
+//             int b = h1->searchElementinTable(vdata[left]->str);
+//             h1->table[a]->indexArray = left;
+//             h1->table[b]->indexArray = i;
+//             swap(vdata[left], vdata[i]);
+//             i = left;
+//     }
+//   }
+// }
+
+// void minHeap::perculateUp(){
+// int i = vdata.size() - 1;
+// // perculate up
+// while(i!=0){
+// //key to parent node
+// int p = (i-1)/2;
+// cout << vdata[p]->frequency <<endl;
+// cout << vdata[i]->frequency <<endl;
+// //if the parent key is greater than the key of the node inserted, bubble up!
+// if(compareEntries(vdata[p],vdata[i])){
+//     int a = h1->searchElementinTable(vdata[p]->str);
+//     int b = h1->searchElementinTable(vdata[i]->str);
+//     h1->table[a]->indexArray = i;
+//     h1->table[b]->indexArray = p;
+//     swap(vdata[i], vdata[p]);
+//     i = p;
+// }else{
+//     break;
+//   }
+// }
+// }
+
+
+// void minHeap::perculateUp(int index){
+//   int p = (index-1)/2;
+//   while(p > 0){
+//     if((compareEntries(vdata[p], vdata[index]))){
+//         int a = h1->searchElementinTable(vdata[p]->str);
+//         int b = h1->searchElementinTable(vdata[index]->str);
+//         h1->table[a]->indexArray = index;
+//         h1->table[b]->indexArray = p;
+//         swap(vdata[index], vdata[p]);
+//     }
+//     index /= 2;
+//   }
+// }

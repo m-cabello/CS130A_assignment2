@@ -39,9 +39,10 @@ class minHeap{
     void popMin();  //delets min value, replaces it with furthest value to the right and then perculates down, then deletes value in the hashtable too
     bool isFull(); // checks if size is full
     int getSize(); //returns size of valid entries in the array
+    int minChild(int index);
     bool compareEntries(entry* e1, entry* e2);
     void perculateUp();
-    void perculateDown();
+    void perculateDown(int index);
     string printHeap(); // prints "String:Frequency"
  private:
     std::vector<entry*> vdata;
