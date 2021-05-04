@@ -283,9 +283,6 @@ void minHeap::insert(string value){
     //   cout << vdata.at(i)->str << ":" << vdata.at(i)->frequency << ",";
     // }
     //   cout << endl;
-    //printHashTable();
-    //cout << endl;
-         
 }
 
 void minHeap::popMin(){
