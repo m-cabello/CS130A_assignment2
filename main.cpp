@@ -32,7 +32,6 @@ int main(int argc, char** argv){
                 heap1.insert(line); 
               }
     }
-
   stringFile.close();
   // Writting to File
   ofstream myfile;

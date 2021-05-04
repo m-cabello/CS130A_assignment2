@@ -256,9 +256,7 @@ void minHeap::insert(string value){
         size++;
         inserted++;
         insertHashTable(value);
-        //cout << "into perculateUp" <<endl;
         perculateUp();
-        //cout << "out of perculateUp" <<endl;
       // If there is no space on the table, then delete the min value(the root)
       }else{
           int freq = vdata[0]->frequency;
@@ -278,7 +276,7 @@ void minHeap::insert(string value){
       int num = h1->searchElementinTable(value);
       h1->table.at(num)->frequency++;
       vdata.at(h1->searchElementinArray(value))->frequency ++;
-      perculateDown(0);
+      perculateDown(h1->searchElementinArray(value));
   }
     //Print array after every insert
     // for(int i = 0; i < vdata.size(); i++){
