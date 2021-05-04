@@ -192,7 +192,7 @@ while(i!=0){
 //key to parent node
 int p = (i-1)/2;
 //if the parent key is greater than the key of the node inserted, bubble up!
-if(compareEntries(vdata[p],vdata[i])){
+  if(compareEntries(vdata[p],vdata[i])){
     int a = h1->searchElementinTable(vdata[p]->str);
     int b = h1->searchElementinTable(vdata[i]->str);
     h1->table[a]->indexArray = i;
@@ -264,10 +264,10 @@ void minHeap::insert(string value){
       perculateDown(0);
   }
     //Print array after every insert
-    // for(int i = 0; i < vdata.size(); i++){
-    //   cout << vdata.at(i)->str << ":" << vdata.at(i)->frequency << ",";
-    // }
-    //   cout << endl;
+    for(int i = 0; i < vdata.size(); i++){
+      cout << vdata.at(i)->str << ":" << vdata.at(i)->frequency << ",";
+    }
+      cout << endl;
          
 }
 
